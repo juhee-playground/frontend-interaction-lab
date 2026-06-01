@@ -18,6 +18,7 @@ React + TypeScript + Vite 기반 인터랙션 구현 연습용 모노레포입�
 frontend-interaction-lab/
 ├── apps/
 │   ├── accordion/
+│   ├── coupon/
 │   ├── modal/
 │   ├── tabs/
 │   └── todo-app/
@@ -68,6 +69,12 @@ pnpm install
 
 ```
 pnpm --filter accordion dev
+```
+
+### Coupon
+
+```
+pnpm --filter coupon dev
 ```
 
 ### Modal

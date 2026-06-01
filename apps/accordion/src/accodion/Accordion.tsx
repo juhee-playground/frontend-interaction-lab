@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import AccordionContext from "./AccordionContext";
 
-export const Accordion = ({ children }) => {
-  const [openValue, setOpenValue] = useState([]);
+interface IAccordionProps {
+  children: ReactNode;
+}
+
+export const Accordion = ({ children }: IAccordionProps) => {
+  const [openValue, setOpenValue] = useState<string[]>([]);
   const toggle = (itemValue: string) => {
     setOpenValue((prev) => {
       if (prev.includes(itemValue)) {
