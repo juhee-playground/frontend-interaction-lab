@@ -1,9 +1,12 @@
-import { useContext } from "react";
+import { useContext, type ReactNode } from "react";
 
 import AccordionContext from "./AccordionContext";
 import AccodionItemContext from "./AccordionItemContext";
+interface IAccordionProps {
+  children: ReactNode;
+}
 
-export const AccordionTrigger = ({ children }) => {
+export const AccordionTrigger = ({ children }: IAccordionProps) => {
   const { toggle } = useContext(AccordionContext);
   const { itemValue } = useContext(AccodionItemContext);
   return (

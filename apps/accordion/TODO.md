@@ -1,16 +1,99 @@
-# Accordion 구현 TODO
+# Accordion --- Week 1 TODO
 
-매일 30분씩, 하나의 미션을 완료하세요.
-체크박스를 채워가며 진행 상황을 추적하세요.
+## 이번 주 목표
+
+**Accordion 하나를 반복해서 이해하고 직접 구현한다.**
+
+이번 주에는 기능 욕심을 줄인다.
+
+- 기본 상태 흐름
+- Compound Component
+- Context
+- single / multiple
+- defaultValue / disabled
+- 기본 접근성
+
+`controlled / uncontrolled`, animation, 테스트는 다음 단계로 넘긴다.
 
 ---
 
-## Day 1: Compound Component 패턴으로 API 리팩토링
+## Day 1 --- 기존 코드 기억 복구 ✅
 
-**목표:** 하드코딩된 구조를 아래 API 형태로 바꾸기
+### 목표
+
+기존 Accordion 코드를 수정하기 전에
+**상태가 어디에 있고 어떻게 흐르는지 다시 이해한다.**
+
+### 확인할 것
+
+- [x] `openValue`는 어디에 있는가?
+- [x] 누가 열린 상태를 소유하는가?
+- [x] `toggle` 함수는 어디에 있는가?
+- [x] 클릭하면 결국 어떤 함수가 호출되는가?
+- [x] `AccordionContext`에는 무엇이 들어가는가?
+- [x] `AccordionItemContext`에는 무엇이 들어가는가?
+- [x] Context가 왜 2개인가?
+- [x] Trigger → Content까지 상태 흐름을 설명할 수 있는가?
+
+### 종료 조건
+
+코드 없이 아래 흐름을 설명할 수 있다.
+
+Trigger 클릭
+→ toggle(itemValue)
+→ Accordion의 openValue 변경
+→ Content가 openValue 확인
+→ 화면 변경
+
+---
+
+## Day 2 --- Context 없이 기본 Accordion 다시 만들기
+
+### 목표
+
+기존 Accordion을 최대한 보지 않고
+**가장 단순한 상태 흐름부터 직접 만든다.**
+
+### 제한
+
+- Context ❌
+- Compound Component ❌
+- single / multiple 구분 ❌
+- 접근성 확장 ❌
+
+### 할 일
+
+- [ ] Item 3개 만들기
+- [ ] 열린 Item을 표현할 state 직접 결정하기
+- [ ] Header 클릭 → Content 열기
+- [ ] 같은 Header 클릭 → 닫기
+- [ ] 다른 Header 클릭 → 기존 Content 닫고 새 Content 열기
+
+### 생각할 질문
+
+- 열린 상태에는 무엇을 저장해야 할까?
+- `boolean` 하나면 충분할까?
+- 여러 Item 중 누가 열렸는지는 어떻게 구분할까?
+- Header 클릭이 어떻게 Content 변경까지 이어질까?
+
+### 종료 조건
+
+Context 없이 아래 흐름을 직접 구현하고 설명한다.
+
+Header 클릭
+→ state 변경
+→ 해당 Content 표시
+
+---
+
+## Day 3 --- Compound Component + Context로 변경
+
+### 목표
+
+Day 2에서 만든 코드를 아래 API로 바꾼다.
 
 ```tsx
-<Accordion type="single" defaultValue={["item-1"]}>
+<Accordion>
   <AccordionItem value="item-1">
     <AccordionTrigger>Section 1</AccordionTrigger>
     <AccordionContent>Content 1</AccordionContent>
@@ -18,196 +101,235 @@
 </Accordion>
 ```
 
-**할 일:**
+### 할 일
 
-- [x] `AccordionContext` 생성 (열린 상태 + toggle 함수 제공)
-- [x] `AccordionItemContext` 생성 (각 아이템의 `value`를 하위에 전달)
-- [x] `Accordion` 컴포넌트: Context Provider + 상태 관리
-- [x] `AccordionItem` 컴포넌트: 자기 value를 ItemContext로 제공
-- [x] `AccordionTrigger` 컴포넌트: Context에서 toggle 꺼내서 클릭 핸들러 연결
-- [x] `AccordionContent` 컴포넌트: 열린 상태 확인 후 렌더링
-- [x] `App.tsx`에서 새 API로 사용해보기
+- [ ] 컴포넌트를 역할별로 분리
+- [ ] props drilling이 어디서 생기는지 확인
+- [ ] AccordionContext 만들기
+- [ ] openValue, toggle 전달
+- [ ] AccordionItemContext 만들기
+- [ ] itemValue 전달
+- [ ] Trigger에서 필요한 Context 읽기
+- [ ] Content에서 필요한 Context 읽기
 
-**힌트:**
+### 생각할 질문
 
-- `React.createContext` + `useContext`
-- Accordion이 상태의 주인, 나머지는 Context를 통해 읽기만 함
-- 파일 분리는 나중에 해도 됨. 일단 한 파일에 다 만들어도 OK
+- Context 없이 만들었을 때 무엇이 불편했나?
+- openValue와 toggle은 누구의 값인가?
+- itemValue는 누구의 값인가?
+- 왜 Context를 2개로 나누는가?
 
----
+### 종료 조건
 
-## Day 2: single / multiple 모드 구현
-
-**목표:** `type="single"` vs `type="multiple"` 동작 분기
-
-**할 일:**
-
-- [ ] `type` prop 타입 정의 (`"single" | "multiple"`)
-- [ ] single: 상태를 `string | null`로 관리 (하나만 열림)
-- [ ] multiple: 상태를 `string[]`로 관리 (여러 개 동시 열림)
-- [ ] toggle 로직 분기
-  - single: 같은 값 → 닫기, 다른 값 → 교체
-  - multiple: 배열에 있으면 제거, 없으면 추가
-- [ ] 두 모드 모두 테스트해보기
-
-**힌트:**
-
-- toggle 함수 내부에서 `type`에 따라 분기하면 됨
-- 타입스크립트 유니온 타입 활용: props 자체를 `SingleProps | MultipleProps`로 나눌 수도 있음
+Context를 단순히 `“필요하니까”` 넣는 게 아니라 어떤 props 전달 문제를 해결했는지 설명할 수 있다.
 
 ---
 
-## Day 3: disabled 상태 + defaultValue 지원
+## Day 4 --- single / multiple 상태 설계
 
-**목표:** 특정 아이템 클릭 불가 + 초기 열림 상태 설정
+### 목표
 
-**할 일:**
+UI보다 **상태 모델링과 toggle 로직**에 집중한다.
 
-- [ ] `AccordionItem`에 `disabled` prop 추가
-- [ ] disabled일 때 클릭 무시 처리
-- [ ] disabled 스타일 적용 (opacity 낮추기, cursor 변경 등)
-- [ ] `Accordion`의 `defaultValue` prop으로 초기 열림 상태 설정
-- [ ] defaultValue가 single일 때, multiple일 때 각각 동작 확인
+### 구현 전에 먼저 적기
 
-**힌트:**
+```text
+single
+같은 값을 누르면?
+다른 값을 누르면?
 
-- disabled 체크는 `AccordionTrigger`의 onClick 안에서 하면 됨
-- ItemContext에 disabled 값을 넣어두면 Trigger/Content 모두 접근 가능
-- defaultValue는 `useState`의 초기값으로 넣으면 끝
-
----
-
-## Day 4: 키보드 접근성 (ArrowUp/Down, Enter, Space)
-
-**목표:** 키보드만으로 아코디언 조작 가능하게 만들기
-
-| Key       | 동작           |
-| --------- | -------------- |
-| Enter     | 열기/닫기      |
-| Space     | 열기/닫기      |
-| ArrowDown | 다음 헤더 이동 |
-| ArrowUp   | 이전 헤더 이동 |
-
-**할 일:**
-
-- [ ] `AccordionTrigger`를 `<button>` 태그로 변경 (Enter/Space 자동 지원)
-- [ ] `Accordion` 레벨에서 `onKeyDown` 핸들러 추가
-- [ ] trigger ref 배열 관리 (각 trigger의 DOM 참조 수집)
-- [ ] ArrowDown: 다음 trigger로 focus 이동
-- [ ] ArrowUp: 이전 trigger로 focus 이동
-- [ ] disabled 아이템은 포커스 이동 시 건너뛰기
-
-**힌트:**
-
-- `useRef`로 trigger 배열 관리하거나, Context를 통해 register/unregister 패턴 사용
-- 현재 포커스된 요소의 인덱스를 찾고, ±1 해서 다음 요소에 `.focus()` 호출
-- 처음/끝에서 순환할지 말지는 자유 (순환 추천)
-
----
-
-## Day 5: ARIA 속성 적용
-
-**목표:** 스크린 리더가 아코디언 구조를 이해할 수 있게 만들기
-
-**할 일:**
-
-- [ ] `AccordionTrigger`에 `aria-expanded={isOpen}` 추가
-- [ ] `AccordionTrigger`에 `aria-controls={panelId}` 추가
-- [ ] `AccordionContent`에 `role="region"` 추가
-- [ ] `AccordionContent`에 `aria-labelledby={triggerId}` 추가
-- [ ] `AccordionContent`에 `id={panelId}` 추가
-- [ ] `AccordionTrigger`에 `id={triggerId}` 추가
-- [ ] id 생성 규칙 통일 (예: `accordion-trigger-{value}`, `accordion-panel-{value}`)
-
-**힌트:**
-
-- id는 `value` 기반으로 만들면 고유성 보장됨
-- `useId()` (React 18+) 써도 좋지만, value 기반이 더 직관적
-
----
-
-## Day 6: 열림/닫힘 애니메이션
-
-**목표:** 콘텐츠가 부드럽게 열리고 닫히기
-
-**할 일:**
-
-- [ ] 콘텐츠를 조건부 렌더링 대신 항상 DOM에 유지
-- [ ] `data-state="open" | "closed"` 속성 추가
-- [ ] CSS transition 적용 (방법 택 1)
-  - 방법 A: `grid-template-rows: 0fr → 1fr`
-  - 방법 B: `max-height: 0 → auto` (JS로 높이 계산 필요)
-  - 방법 C: CSS `@starting-style` + `interpolate-size` (최신 브라우저)
-- [ ] `overflow: hidden` 처리
-- [ ] 열릴 때 / 닫힐 때 모두 자연스러운지 확인
-
-**힌트:**
-
-- 가장 간단한 건 grid 트릭:
-  ```css
-  .content-wrapper {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.3s ease;
-  }
-  .content-wrapper[data-state="open"] {
-    grid-template-rows: 1fr;
-  }
-  .content-inner {
-    overflow: hidden;
-  }
-  ```
-- 닫힐 때 바로 unmount하면 애니메이션이 안 보임. 항상 렌더링하되 높이만 조절!
-
----
-
-## Day 7: Controlled / Uncontrolled 지원
-
-**목표:** 외부에서 상태를 주입할 수도 있고, 내부에서 알아서 관리할 수도 있게
-
-```tsx
-// Uncontrolled (내부 상태 관리)
-<Accordion type="single" defaultValue={["item-1"]} />
-
-// Controlled (외부 상태 주입)
-<Accordion type="single" value={value} onValueChange={setValue} />
+multiple
+배열에 이미 있으면?
+배열에 없으면?
 ```
 
-**할 일:**
+### 상태 모델
 
-- [ ] `value` prop 추가 (controlled 모드용)
-- [ ] `onValueChange` prop 추가 (상태 변경 콜백)
-- [ ] controlled 판별 로직: `value !== undefined`이면 controlled
-- [ ] controlled일 때: 내부 setState 대신 `onValueChange` 호출
-- [ ] uncontrolled일 때: 기존처럼 내부 상태 사용
-- [ ] 두 모드 모두 동작 확인
+```text
+single
+→ string | null
 
-**힌트:**
+multiple
+→ string[]
+```
 
-- `useControllableState` 커스텀 훅으로 추상화하면 깔끔:
-  ```ts
-  function useControllableState<T>(
-    controlledValue: T | undefined,
-    defaultValue: T,
-    onChange?: (v: T) => void,
-  ) {
-    const [internal, setInternal] = useState(defaultValue);
-    const isControlled = controlledValue !== undefined;
-    const value = isControlled ? controlledValue : internal;
-    const setValue = (next: T) => {
-      if (!isControlled) setInternal(next);
-      onChange?.(next);
-    };
-    return [value, setValue] as const;
-  }
-  ```
+### 할 일
+
+- [ ] `type: "single" | "multiple"` 정의
+- [ ] single 상태 구조 결정
+- [ ] multiple 상태 구조 결정
+- [ ] single: 같은 Item 클릭 → 닫기
+- [ ] single: 다른 Item 클릭 → 교체
+- [ ] multiple: 닫힌 Item 클릭 → 추가
+- [ ] multiple: 열린 Item 클릭 → 제거
+- [ ] 두 모드 직접 테스트
+
+### 종료 조건
+
+코드를 보지 않고 위 4가지 경우의 다음 state가 무엇이 되어야 하는지 말할 수 있다.
 
 ---
 
-## 보너스: 완성 후 체크리스트
+## Day 5 --- defaultValue + disabled
 
-- [ ] 모든 모드 조합 테스트 (single + controlled, multiple + uncontrolled 등)
-- [ ] 키보드로만 전체 조작 가능한지 확인
-- [ ] 크롬 개발자도구 → Accessibility 탭에서 트리 구조 확인
-- [ ] 코드 정리 및 파일 분리 (Accordion/, index.ts, 각 서브컴포넌트)
-- [ ] README에 사용법 예시 추가
+### 목표
+
+props가 초기 상태와 사용자 인터랙션에 어떤 영향을 주는지 이해한다.
+Accordion의 기본 기능을 마무리한다.
+
+#### defaultValue
+
+- 초기 열린 상태 설정
+- single에서 확인
+- multiple에서 확인
+
+#### 생각할 질문
+
+- `defaultValue`와 현재 `openValue`는 무엇이 다른가?
+- 왜 `if (disabled) return`보다 `<button disabled>`가 좋은가?
+- disabled 정보는 Trigger까지 어떻게 전달할까?
+- defaultValue는 언제 사용되는가?
+
+#### disabled
+
+- AccordionItem에 disabled 추가
+- disabled를 Trigger까지 전달
+- <button disabled> 적용
+- disabled Item 클릭 방지
+- disabled 스타일 확인
+
+#### 생각할 것:
+
+- disabled는 Accordion 전체의 값인가?
+- Item의 값인가?
+- 어느 Context에 있어야 할까?
+
+#### 기본 접근성
+
+- Trigger가 <button>인지 확인
+- Enter 동작 확인
+- Space 동작 확인
+- Tab focus 확인
+- aria-expanded 적용
+- aria-controls 적용
+- Trigger / Content id 연결
+
+### 할 일
+
+- [ ] `defaultValue`로 초기 열린 상태 설정
+- [ ] single의 `defaultValue` 확인
+- [ ] multiple의 `defaultValue` 확인
+- [ ] `AccordionItem`에 `disabled` 추가
+- [ ] Trigger에 실제 `<button disabled>` 적용
+- [ ] disabled Item이 클릭되지 않는지 확인
+- [ ] disabled Item의 스타일 표현
+
+### 종료 조건
+
+`defaultValue`와 `disabled`가 각각 **상태 초기화 / 인터랙션 제한**이라는
+차이를 설명할 수 있다.
+
+---
+
+## 이번 주 회고
+
+- State 소유자를 찾을 수 있는가?
+- Context가 필요한 이유를 설명할 수 있는가?
+- Context를 어떤 범위로 나눌지 판단할 수 있는가?
+- single / multiple의 상태 차이를 설명할 수 있는가?
+- 가장 많이 막힌 부분은 무엇인가?
+- React 개념 때문이었나?
+- JavaScript / TypeScript 문법 때문이었나?
+
+## Day 6 --- 기본 접근성 + 키보드
+
+### 목표
+
+마우스 없이 Accordion을 사용할 수 있게 만든다.
+
+### 먼저 확인
+
+`AccordionTrigger`가 `<button>`이라면:
+
+- Enter → 기본 지원
+- Space → 기본 지원
+- Tab → 기본 focus 이동
+
+따라서 중복 구현하지 않는다.
+
+### 할 일
+
+- [ ] Trigger가 `<button>`인지 확인
+- [ ] `aria-expanded` 적용
+- [ ] `aria-controls` 적용
+- [ ] Trigger / Content 연결용 id 적용
+- [ ] Content에 적절한 ARIA 관계 설정
+- [ ] ArrowDown으로 다음 Trigger focus
+- [ ] ArrowUp으로 이전 Trigger focus
+- [ ] disabled Trigger를 어떻게 건너뛸지 생각하기
+
+### 생각할 질문
+
+- 브라우저가 이미 해주는 키보드 동작은 무엇인가?
+- 우리가 직접 구현해야 하는 것은 무엇인가?
+- focus 이동을 위해 어떤 DOM 정보가 필요한가?
+
+### 종료 조건
+
+마우스를 사용하지 않고 Accordion을 조작해본다.
+
+---
+
+## 다음주 시작할 때
+
+## Day 7 --- 처음부터 다시 만들기
+
+### 목표
+
+이번 주의 진짜 테스트.
+
+**기존 Accordion 구현을 최대한 보지 않고 새 파일에서 다시 만든다.**
+
+### 구현 순서도 스스로 결정하기
+
+- [ ] 필요한 컴포넌트 구성 생각하기
+- [ ] 상태 소유자 결정하기
+- [ ] 상태 타입 결정하기
+- [ ] 기본 toggle 구현
+- [ ] Compound Component 구성
+- [ ] Context 구성
+- [ ] single / multiple 구현
+- [ ] defaultValue 적용
+- [ ] disabled 적용
+- [ ] 기본 ARIA 적용
+
+막힌 부분은 표시만 하고 가능한 곳까지 계속 진행한다.
+
+### 마지막 회고
+
+- [ ] 가장 쉽게 구현된 부분은?
+- [ ] 아직 기억이 안 나는 부분은?
+- [ ] React 개념 문제였나, JavaScript 문법 문제였나?
+- [ ] TypeScript에서 가장 막힌 부분은?
+- [ ] 처음 Day 1 코드보다 지금 구조를 더 잘 설명할 수 있는가?
+
+### 성공 기준
+
+완벽하게 외워서 만드는 것이 목표가 아니다.
+
+> 무엇을 만들어야 하는지 스스로 쪼개고, 상태 흐름을 설계하고, 모르는
+> 부분을 정확히 특정할 수 있으면 성공.
+
+---
+
+# 다음 주 후보 --- 아직 하지 않기
+
+이번 주를 끝낸 뒤 진행 여부를 결정한다.
+
+- [ ] Controlled / Uncontrolled
+- [ ] `onValueChange`
+- [ ] `useControllableState`
+- [ ] open / close animation
+- [ ] 파일 구조 정리
+- [ ] 테스트 작성
+- [ ] README 사용 예제

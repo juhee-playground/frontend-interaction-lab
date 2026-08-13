@@ -1,9 +1,13 @@
-import { useContext } from "react";
+import { useContext, type ReactNode } from "react";
 
 import AccordionContext from "./AccordionContext";
 import AccodionItemContext from "./AccordionItemContext";
 
-export const AccordionContent = ({ children }) => {
+interface IAccordionProps {
+  children: ReactNode;
+}
+
+export const AccordionContent = ({ children }: IAccordionProps) => {
   const { openValue } = useContext(AccordionContext);
   const { itemValue } = useContext(AccodionItemContext);
   const isOpen = openValue.includes(itemValue);
