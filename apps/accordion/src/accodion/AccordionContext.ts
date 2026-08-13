@@ -1,13 +1,11 @@
-import { createContext } from "react";
+import React from "react";
 
-interface IAccordionContext {
-  openValue: string[];
+interface IAccordionContextValue {
+  openValue: string | null;
   toggle: (itemValue: string) => void;
 }
 
-const AccordionContext = createContext<IAccordionContext>({
-  openValue: [],
+export const AccordionContext = React.createContext<IAccordionContextValue>({
+  openValue: null,
   toggle: () => {},
 });
-
-export default AccordionContext;

@@ -1,24 +1,43 @@
-import { useState, type ReactNode } from "react";
-import AccordionContext from "./AccordionContext";
+import React, { useState } from "react";
+import { AccordionItem } from "./AccordionItem";
 
-interface IAccordionProps {
-  children: ReactNode;
-}
-
-export const Accordion = ({ children }: IAccordionProps) => {
-  const [openValue, setOpenValue] = useState<string[]>([]);
-  const toggle = (itemValue: string) => {
-    setOpenValue((prev) => {
-      if (prev.includes(itemValue)) {
-        return prev.filter((v) => v !== itemValue);
-      } else {
-        return [...prev, itemValue];
-      }
-    });
+export const Accordion = () => {
+  const [openValue, setOpenValue] = useState<string | null>(null);
+  const clickToggle = (id: string) => {
+    console.log("click", id);
+    if (openValue === id) {
+      setOpenValue(null);
+    } else {
+      setOpenValue(id);
+    }
   };
+
   return (
-    <AccordionContext.Provider value={{ openValue, toggle }}>
-      {children}
-    </AccordionContext.Provider>
+    <React.Fragment>
+      <div className="flex flex-col gap-1">
+        <AccordionItem
+          sectionId="item-1"
+          sectionName="Section 1"
+          content="Content 1"
+          sectionHeader={openValue}
+          onToggle={clickToggle}
+        />
+        <AccordionItem
+          sectionId="item-2"
+          sectionName="Section 2"
+          content="Content 2"
+          sectionHeader={openValue}
+          onToggle={clickToggle}
+        />
+        <AccordionItem
+          sectionId="item-3"
+          sectionName="Section 3"
+          content="Content 3"
+          sectionHeader={openValue}
+          onToggle={clickToggle}
+        />
+      </div>
+      <div className="mt-2">{openValue}</div>
+    </React.Fragment>
   );
 };

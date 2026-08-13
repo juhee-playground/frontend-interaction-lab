@@ -1,7 +1,3 @@
-import { Accordion } from "./accodion/Accordion";
-import { AccordionContent } from "./accodion/AccordionContent";
-import { AccordionItem } from "./accodion/AccordionItem";
-import { AccordionTrigger } from "./accodion/AccordionTrigger";
 import { ReAccordion } from "./accodion/ReAccordion";
 
 import "./App.css";

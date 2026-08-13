@@ -1,5 +1,5 @@
-import { createContext } from "react";
+import React from "react";
 
-const AccodionItemContext = createContext({ itemValue: "" });
-
-export default AccodionItemContext;
+export const AccordionItemContext = React.createContext({
+  itemValue: "",
+});
