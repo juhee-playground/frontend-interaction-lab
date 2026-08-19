@@ -1,7 +1,6 @@
 import { AccordionContent } from "./AccordionContent";
+import { AccordionItemContext } from "./AccordionItemContext";
 import { AccordionTrigger } from "./AccordionTrigger";
-import AccodionItemContext from "./remove/AccordionItemContext";
-
 interface IAccordionItemProps {
   sectionId: string;
   sectionName: string;
@@ -14,7 +13,7 @@ export const AccordionItem = ({
   content,
 }: IAccordionItemProps) => {
   return (
-    <AccodionItemContext.Provider
+    <AccordionItemContext.Provider
       value={{
         itemValue: sectionId,
       }}
@@ -23,6 +22,6 @@ export const AccordionItem = ({
         <AccordionTrigger title={sectionName} />
         <AccordionContent content={content} />
       </section>
-    </AccodionItemContext.Provider>
+    </AccordionItemContext.Provider>
   );
 };

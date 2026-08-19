@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { AccordionItem } from "./AccordionItem";
-import { AccordionContext } from "./AccordionContext";
 
 export const Accordion = () => {
   const [openValue, setOpenValue] = useState<string | null>(null);
@@ -11,34 +9,23 @@ export const Accordion = () => {
       setOpenValue(id);
     }
   };
-
   return (
     <React.Fragment>
-      <AccordionContext.Provider
-        value={{
-          openValue,
-          toggle: clickToggle,
-        }}
-      >
-        <div className="flex flex-col gap-1">
-          <AccordionItem
-            sectionId="item-1"
-            sectionName="Section 1"
-            content="Content 1"
-          />
-          <AccordionItem
-            sectionId="item-2"
-            sectionName="Section 2"
-            content="Content 2"
-          />
-          <AccordionItem
-            sectionId="item-3"
-            sectionName="Section 3"
-            content="Content 3"
-          />
-        </div>
-      </AccordionContext.Provider>
-      <div className="mt-2">{openValue}</div>
+      <div className="flex flex-col gap-1">
+        <section className="px-2 border border-indigo-500">
+          <div onClick={() => clickToggle("item-1")}>Section 1</div>
+          {openValue === "item-1" && <div>Content 1</div>}
+        </section>
+        <section className="px-1 border border-indigo-500">
+          <div onClick={() => clickToggle("item-2")}>Section 2</div>
+          {openValue === "item-2" && <div>Content 2</div>}
+        </section>
+        <section className="px-1 border border-indigo-500">
+          <div onClick={() => clickToggle("item-3")}>Section 3</div>
+          {openValue === "item-3" && <div>Content 3</div>}
+        </section>
+      </div>
+      <div className="mt-2">Current: {openValue}</div>
     </React.Fragment>
   );
 };
