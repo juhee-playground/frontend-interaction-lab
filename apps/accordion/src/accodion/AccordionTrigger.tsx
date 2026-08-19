@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { AccordionContext } from "./AccordionContext";
-import AccodionItemContext from "./remove/AccordionItemContext";
+import { AccordionItemContext } from "./AccordionItemContext";
 
 interface AccordionTriggerProps {
   title: string;
@@ -8,6 +8,6 @@ interface AccordionTriggerProps {
 
 export const AccordionTrigger = ({ title }: AccordionTriggerProps) => {
   const { toggle } = useContext(AccordionContext);
-  const { itemValue } = useContext(AccodionItemContext);
+  const { itemValue } = useContext(AccordionItemContext);
   return <div onClick={() => toggle(itemValue)}>{title}</div>;
 };

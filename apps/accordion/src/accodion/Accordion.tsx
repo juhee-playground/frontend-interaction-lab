@@ -1,30 +1,66 @@
 import React, { useState } from "react";
+import { AccordionItem } from "./AccordionItem";
+import { AccordionContext } from "./AccordionContext";
 
-export const Accordion = () => {
-  const [openValue, setOpenValue] = useState<string | null>(null);
-  const clickToggle = (id: string) => {
-    if (openValue === id) {
-      setOpenValue(null);
+interface IAccordionProps {
+  type: "single" | "multiple";
+}
+
+type TSingle = string | null;
+type TMultiple = string[];
+
+export const Accordion = ({ type }: IAccordionProps) => {
+  const initialValue = type === "single" ? null : [];
+  const [openValue, setOpenValue] = useState<TSingle | TMultiple>(initialValue);
+  const clickToggle = (itemValue: string) => {
+    if (type === "single") {
+      // type이 single이면
+      if (openValue === itemValue) {
+        setOpenValue(null);
+      } else {
+        setOpenValue(itemValue);
+      }
     } else {
-      setOpenValue(id);
+      // type이 multiple이면
+      // openValue안에 id 있는지 확인
+      if (!Array.isArray(openValue)) {
+        return;
+      }
+
+      if (openValue.includes(itemValue)) {
+        setOpenValue(openValue.filter((value) => value !== itemValue));
+      } else {
+        setOpenValue([...openValue, itemValue]);
+      }
     }
   };
   return (
     <React.Fragment>
-      <div className="flex flex-col gap-1">
-        <section className="px-2 border border-indigo-500">
-          <div onClick={() => clickToggle("item-1")}>Section 1</div>
-          {openValue === "item-1" && <div>Content 1</div>}
-        </section>
-        <section className="px-1 border border-indigo-500">
-          <div onClick={() => clickToggle("item-2")}>Section 2</div>
-          {openValue === "item-2" && <div>Content 2</div>}
-        </section>
-        <section className="px-1 border border-indigo-500">
-          <div onClick={() => clickToggle("item-3")}>Section 3</div>
-          {openValue === "item-3" && <div>Content 3</div>}
-        </section>
-      </div>
+      <AccordionContext.Provider
+        value={{
+          openValue,
+          toggle: clickToggle,
+          type,
+        }}
+      >
+        <AccordionItem
+          sectionId="item-1"
+          sectionName="Section 1"
+          content="Content 1"
+        />
+
+        <AccordionItem
+          sectionId="item-2"
+          sectionName="Section 2"
+          content="Content 2"
+        />
+
+        <AccordionItem
+          sectionId="item-3"
+          sectionName="Section 3"
+          content="Content 3"
+        />
+      </AccordionContext.Provider>
       <div className="mt-2">Current: {openValue}</div>
     </React.Fragment>
   );

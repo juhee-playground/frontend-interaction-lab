@@ -7,7 +7,15 @@ interface IAccordionContentProps {
 }
 
 export const AccordionContent = ({ content }: IAccordionContentProps) => {
-  const { openValue } = useContext(AccordionContext);
+  const { openValue, type } = useContext(AccordionContext);
   const { itemValue } = useContext(AccordionItemContext);
-  return openValue === itemValue && <div>{content}</div>;
+  if (type === "single") {
+    return openValue === itemValue ? <div>{content}</div> : null;
+  }
+
+  if (!Array.isArray(openValue)) {
+    return null;
+  }
+
+  return openValue.includes(itemValue) && <div>{content}</div>;
 };
