@@ -63,11 +63,11 @@ Trigger 클릭
 
 ### 할 일
 
-- [ ] Item 3개 만들기
-- [ ] 열린 Item을 표현할 state 직접 결정하기
-- [ ] Header 클릭 → Content 열기
-- [ ] 같은 Header 클릭 → 닫기
-- [ ] 다른 Header 클릭 → 기존 Content 닫고 새 Content 열기
+- [x] Item 3개 만들기
+- [x] 열린 Item을 표현할 state 직접 결정하기
+- [x] Header 클릭 → Content 열기
+- [x] 같은 Header 클릭 → 닫기
+- [x] 다른 Header 클릭 → 기존 Content 닫고 새 Content 열기
 
 ### 생각할 질문
 
@@ -103,14 +103,14 @@ Day 2에서 만든 코드를 아래 API로 바꾼다.
 
 ### 할 일
 
-- [ ] 컴포넌트를 역할별로 분리
-- [ ] props drilling이 어디서 생기는지 확인
-- [ ] AccordionContext 만들기
-- [ ] openValue, toggle 전달
-- [ ] AccordionItemContext 만들기
-- [ ] itemValue 전달
-- [ ] Trigger에서 필요한 Context 읽기
-- [ ] Content에서 필요한 Context 읽기
+- [x] 컴포넌트를 역할별로 분리
+- [x] props drilling이 어디서 생기는지 확인
+- [x] AccordionContext 만들기
+- [x] openValue, toggle 전달
+- [x] AccordionItemContext 만들기
+- [x] itemValue 전달
+- [x] Trigger에서 필요한 Context 읽기
+- [x] Content에서 필요한 Context 읽기
 
 ### 생각할 질문
 
